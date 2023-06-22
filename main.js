@@ -1,57 +1,43 @@
-//Homework1
-function add(a,b){
-    return a+b;
-}
+const express = require('express');
+const path = require('path');
+const app = express();
 
-function minus(a,b){
-    return a-b;
-}
+app.use(express.urlencoded({ extended: true }));
 
-function multiplide(a,b){
-    return a*b;
-}
+app.get('/', (req, res) => {
+    // __dirname D:\APTECH\NodeJs
+    res.sendFile(path.join(__dirname, 'index.html'));
+})
 
-function divide(a,b){
-    return a/b;
-}
 
-async function calculator(a,b,operator){
-    var result;
-    switch(operator){
-        case "+":
-            result = add(a,b);
-            break;
-        case "-":
-            result = minus(a,b);
-            break;
-        case "*":
-            result = multiplide(a,b);
-            break;
-        case "/":
-            result = divide(a,b);
-            break;
-        default:
-            throw new Error("Wrong operator!");
-
-    }
-    return result;
-}
-
-async function runCalculator(){
-    const a=5;
-    const b=4;
-    const pheptoancong = "+";
-    const pheptoantru = "-";
-
-    console.log(a);
-    console.log(b);
-
-    var result1 = await calculator(a,b,pheptoancong);
+app.post('/calculate', (req, res) => {
+    const { num1, num2 } = req.body; 
+    const resultAdd = add(Number(num1), Number(num2));
+    const resultSub = sub(Number(num1), Number(num2));
+    const resultMulti = multi(Number(num1), Number(num2));
+    const resultDiv = div(Number(num1), Number(num2));
+    res.send(`Tong: ${resultAdd} Hieu: ${resultSub} Nhan: ${resultMulti} Chia: ${resultDiv}`)
     
-    var result2 = await calculator(a,b,pheptoantru);
+})
 
-    console.log(`Result1: ${result1}`);
-    console.log(`Result2: ${result2}`);
+function add(num1, num2) {
+    return num1 + num2;
 }
 
-runCalculator();
+function sub(num1, num2) {
+    return num1 - num2;
+}
+
+function multi(num1, num2) {
+    return num1 * num2;
+}
+
+function div(num1, num2) {
+    return num1 / num2;
+}
+
+
+const port = 3000;
+app.listen(port, () => {
+  console.log(`Server running at http://localhost:${port}/`);
+});
